@@ -31,7 +31,24 @@ npm i -g @nestjs/cli
 docker-compose up -d
 ```
 
+5. Levantar la aplicación
+```
+yarn start:dev
+
+```
+
+6. Llenar la BD
+```
+http://localhost:3000/api/v2/seed/llenar
+
+```
+
+
 
 ## Stack usado
 * MongoDB
-* Nest
+* Nest 
+  * Mongoose para conectar a la BD Mongo
+      yarn add @nestjs/mongoose mongoose
+  * Axios: cliente HTTP para para realizar peticiones a servicios externos, ya sea APIs REST, microservicios u otros endpoints.
+      yarn add @nestjs/axios axios 
