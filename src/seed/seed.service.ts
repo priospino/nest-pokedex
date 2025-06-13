@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { HttpService } from '@nestjs/axios';
 import { Model } from 'mongoose';
 import { Pokemon } from 'src/pokemon/entities/pokemon.entity';
 import { PokeResponse } from './interfaces/poke-response.interface';
-import { firstValueFrom } from 'rxjs';
+import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 
 
 @Injectable()
@@ -16,7 +15,8 @@ export class SeedService {
   constructor(
     @InjectModel(Pokemon.name)
     private readonly pokemonModel: Model<Pokemon>,
-    private readonly http: HttpService,
+    //private readonly http: HttpService,
+    private readonly http: AxiosAdapter,
   ) {}
 
   
@@ -28,9 +28,10 @@ export class SeedService {
 
     // Paso 2: Hacer una petición HTTP a la API de Pokemones.
     // Se utiliza firstValueFrom para convertir el Observable en una Promesa.
-    const { data } = await firstValueFrom(
+    /*const { data } = await firstValueFrom(
       this.http.get<PokeResponse>('https://pokeapi.co/api/v2/pokemon?limit=650'),
-    );
+    );*/
+     const data = await this.http.get<PokeResponse>('https://pokeapi.co/api/v2/pokemon?limit=650');
 
     // Paso 3: Transformar la data recibida para insertar en MongoDB.
     const pokemonToInsert = data.results.map(({ name, url }) => {
