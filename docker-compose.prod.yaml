@@ -1,0 +1,32 @@
+version: '3'
+
+services:  # Definición de los servicios/containers a levantar
+  pokedexapp: # Servicio principal de la aplicación NestJS
+    depends_on:
+      - db
+    build: # Instrucciones para construir la imagen
+      context: .  # Directorio desde donde se construye la imagen (raíz del proyecto)
+      dockerfile: Dockerfile 
+    image: pokedex-docker # Nombre de la imagen resultante
+    container_name: pokedexapp # Nombre personalizado del contenedor
+    restart: always # Reinicia el contenedor automáticamente si falla o se detiene
+    ports:
+      - "${PORT}:${PORT}" # Mapea el puerto del host al contenedor usando variables de entorno
+    # working_dir: /var/www/pokedex
+    environment:
+      MONGODB: ${MONGODB} # URI de conexión a MongoDB (desde .env)
+      PORT: ${PORT}
+      DEFAULT_LIMIT: ${DEFAULT_LIMIT}
+    # volumes:
+    #   - ./:/var/www/pokedex
+
+  db: # Servicio de base de datos MongoDB
+    image: mongo:5
+    container_name: mongo-poke
+    restart: always # Reinicia MongoDB automáticamente si falla
+    ports:
+      - 27017:27017
+    environment:
+      MONGODB_DATABASE: nest-pokemon
+    volumes:
+      - ./mongo:/data/db
